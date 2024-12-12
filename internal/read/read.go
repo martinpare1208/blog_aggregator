@@ -9,48 +9,47 @@ import (
 	"github.com/martinpare1208/gator/internal/config"
 )
 
-const configFileName = "/blog_aggregator/.gatorconfig.json"
 
-
-func Read() (error) {
+func Read(file string) (config.Config, error) {
 
 	// Get current file path
-	filePath, err := getConfigFilePath()
+	filePath, err := getConfigFilePath(file)
 	if err != nil {
-		return errors.New("could not get file path")
+		return config.Config{}, errors.New("could not get file path")
 	}
 
 	// Read the json
 	content, err := os.ReadFile(filePath)
 	if err != nil {
-		return errors.New("could not read json file")
+		return config.Config{}, errors.New("could not read json file")
 	}
 
 	// Unpack json into go struct
 	var payload config.Config
 	err = json.Unmarshal(content, &payload)
 	if err != nil {
-		return errors.New("error during Unmarshal()")
+		return config.Config{}, errors.New("error during Unmarshal()")
 	}
 
 	// Print data from payload
 	fmt.Printf("dbURL: %s\n", payload.DbURL)
 
-	return nil
+	return payload, nil
 
 
 
 }
 
-func getConfigFilePath() (string, error) {
+func getConfigFilePath(cfgFile string) (string, error) {
 
 	// Get user's dir
-	dir, err := os.UserHomeDir()
+	dir, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
 
-	// Combine user's dir to project dir
-	jsonFilePath := dir + configFileName
+
+	// Combine user's dir to config json
+	jsonFilePath := dir + cfgFile
 	return jsonFilePath, nil
 }
