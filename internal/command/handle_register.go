@@ -13,9 +13,8 @@ import (
 
 
 func HandlerRegister(s *State, cmd Command) error {
-	err := HandlerLogin(s, cmd)
-	if err != nil {
-		return err
+	if len (cmd.Args) != 1 {
+		return fmt.Errorf("usage: %s <name>", cmd.Name)
 	}
 
 	// create new user in db

@@ -72,7 +72,7 @@ func Read() (Config, error) {
 func getConfigFilePath() (string, error) {
 
 	// Get user's dir
-	dir, err := os.Getwd()
+	dir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
