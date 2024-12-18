@@ -4,10 +4,12 @@ import (
 	"errors"
 
 	"github.com/martinpare1208/gator/internal/config"
+	"github.com/martinpare1208/gator/internal/database"
 )
 
 type State struct {
 	CfgPtr *config.Config
+	DBConnection *database.Queries
 }
 
 type Command struct {

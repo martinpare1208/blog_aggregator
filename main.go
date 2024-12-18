@@ -1,12 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
+	_ "github.com/lib/pq"
 	"github.com/martinpare1208/gator/internal/command"
 	"github.com/martinpare1208/gator/internal/config"
+	"github.com/martinpare1208/gator/internal/database"
 )
 
 
@@ -18,8 +21,19 @@ func main() {
 
 	fmt.Printf("Read config: %+v\n", data)
 	
+	
+	// connect to database
+	
+	db, err := sql.Open("postgres", data.DbURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	dbQueries := database.New(db)
+	
 	state := &command.State{
-		CfgPtr: &data, 
+		CfgPtr: &data,
+		DBConnection: dbQueries, 
 	}
 
 	commands := command.Commands{
@@ -28,11 +42,10 @@ func main() {
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: cli <command> [args...]")
-		return
 	}
 
 	commands.Register("login", command.HandlerLogin)
-
+	commands.Register("register", command.HandlerRegister)
 
 	cmdName := os.Args[1]
 	cmdArgs := os.Args[2:]
@@ -41,6 +54,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 
 
 }
