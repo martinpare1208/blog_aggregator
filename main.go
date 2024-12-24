@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 
@@ -19,7 +18,6 @@ func main() {
 		log.Fatalf("error reading config: %v", err)
 	}
 
-	fmt.Printf("Read config: %+v\n", data)
 	
 	
 	// connect to database
@@ -50,6 +48,8 @@ func main() {
 	commands.Register("users", command.HandlerGetUsers)
 	commands.Register("agg", command.Agg)
 	commands.Register("addfeed", command.HandlerAddFeed)
+	commands.Register("feeds", command.HandlerGetFeeds)
+	commands.Register("follow", command.HandlerFollowFeed)
 	
 	cmdName := os.Args[1]
 	cmdArgs := os.Args[2:]
