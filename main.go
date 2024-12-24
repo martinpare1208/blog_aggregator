@@ -50,6 +50,7 @@ func main() {
 	commands.Register("addfeed", command.HandlerAddFeed)
 	commands.Register("feeds", command.HandlerGetFeeds)
 	commands.Register("follow", command.HandlerFollowFeed)
+	commands.Register("following", command.HandlerFollowing)
 	
 	cmdName := os.Args[1]
 	cmdArgs := os.Args[2:]

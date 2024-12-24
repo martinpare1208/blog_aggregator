@@ -26,7 +26,13 @@ func HandlerAddFeed(s *State, cmd Command) error {
 		return err
 	}
 
-	_, err = s.DBConnection.CreateFeed(context, database.CreateFeedParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Name: name, Url: url, UserID: userInfo.ID,})
+	feedData, err := s.DBConnection.CreateFeed(context, database.CreateFeedParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Name: name, Url: url, UserID: userInfo.ID,})
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	_, err = s.DBConnection.CreateFeedFollow(context, database.CreateFeedFollowParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), UserID: userInfo.ID, FeedID: feedData.ID})
 	if err != nil {
 		log.Fatal(err)
 		return err

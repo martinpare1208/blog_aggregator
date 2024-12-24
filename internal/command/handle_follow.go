@@ -26,6 +26,10 @@ func HandlerFollowFeed(s *State, cmd Command) error {
 	}
 
 	feedInfo, err := s.DBConnection.GetFeedByUrl(context, url)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
 
 	_, err = s.DBConnection.CreateFeedFollow(context, database.CreateFeedFollowParams{ID: uuid.New(), CreatedAt: time.Now(), UpdatedAt: time.Now(), UserID: userInfo.ID, FeedID: feedInfo.ID})
 	if err != nil {
