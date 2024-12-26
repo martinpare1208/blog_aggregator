@@ -51,6 +51,7 @@ func main() {
 	commands.Register("feeds", command.HandlerGetFeeds)
 	commands.Register("follow", command.MiddlewareLoggedIn(command.HandlerFollowFeed))
 	commands.Register("following", command.MiddlewareLoggedIn(command.HandlerFollowing))
+	commands.Register("unfollow", command.MiddlewareLoggedIn(command.HandlerUnfollow))
 	
 	cmdName := os.Args[1]
 	cmdArgs := os.Args[2:]
