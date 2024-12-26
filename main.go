@@ -47,10 +47,10 @@ func main() {
 	commands.Register("reset", command.HandlerReset)
 	commands.Register("users", command.HandlerGetUsers)
 	commands.Register("agg", command.Agg)
-	commands.Register("addfeed", command.HandlerAddFeed)
+	commands.Register("addfeed", command.MiddlewareLoggedIn(command.HandlerAddFeed))
 	commands.Register("feeds", command.HandlerGetFeeds)
-	commands.Register("follow", command.HandlerFollowFeed)
-	commands.Register("following", command.HandlerFollowing)
+	commands.Register("follow", command.MiddlewareLoggedIn(command.HandlerFollowFeed))
+	commands.Register("following", command.MiddlewareLoggedIn(command.HandlerFollowing))
 	
 	cmdName := os.Args[1]
 	cmdArgs := os.Args[2:]

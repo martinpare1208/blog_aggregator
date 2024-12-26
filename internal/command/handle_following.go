@@ -4,27 +4,25 @@ import (
 	"context"
 	"fmt"
 	"log"
+
+	"github.com/martinpare1208/gator/internal/database"
 )
 
-func HandlerFollowing(s *State, cmd Command) error {
+func HandlerFollowing(s *State, cmd Command, user database.User) error {
 
-	// access to db
+
+	fmt.Printf("currentuser: %s\n", user.Name)
 	context := context.Background()
-	userInfo, err := s.DBConnection.GetUser(context, s.CfgPtr.CurrentUser)
+	feeds, err := s.DBConnection.GetFeedFollowsForUser(context, user.ID)
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
 
-
-	feeds, err := s.DBConnection.GetFeedFollowsForUser(context, userInfo.ID)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
 
 	for _, feed := range feeds {
 		fmt.Printf("%s\n", feed.FeedName)
+		fmt.Printf("%s\n", feed.UserName)
 	}
 	
 	fmt.Println("Feed printing complete.")
