@@ -13,5 +13,8 @@ CREATE TABLE feed_follows
 ALTER TABLE feed_follows
 ADD CONSTRAINT user_feed_pair UNIQUE (user_id, feed_id);
 
+-- +goose Down
+DROP TABLE feed_follows;
+
 
 
