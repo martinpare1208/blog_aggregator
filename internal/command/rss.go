@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/martinpare1208/gator/internal/database"
 )
 
@@ -115,12 +116,29 @@ func scrapeFeeds(s *State) (error) {
 		return err
 	}
 
+	//Check which RSS feed the post came from
+	dbFeed, err := s.DBConnection.GetFeedByUrl(context, feed.Url)
+
 
 	// Print to console
 	fmt.Print("Grabbing feed...\n")
 	title := html.UnescapeString(fetchedFeed.Channel.Item[0].Title)
-
+	pubDate := html.UnescapeString(fetchedFeed.Channel.Item[0].PubDate)
+	parsedTime, err := time.Parse(time.RFC1123Z, pubDate)
+	if err != nil {
+		return fmt.Errorf("%s, could not parse date", pubDate)
+	}
 	fmt.Printf("%s\n", title)
+
+	// Save to database
+	_, err = s.DBConnection.CreatePost(context, database.CreatePostParams{ID: uuid.New(), CreatedAt: time.Now(), 
+	UpdatedAt: time.Now(), Title: fetchedFeed.Channel.Item[0].Title, Url: fetchedFeed.Channel.Item[0].Link, 
+	Description: fetchedFeed.Channel.Item[0].Description, PublishedAt: parsedTime, FeedID: dbFeed.ID,})
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
 
 	return nil
 
