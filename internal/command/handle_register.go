@@ -13,7 +13,7 @@ import (
 
 
 func HandlerRegister(s *State, cmd Command) error {
-	if len (cmd.Args) != 1 {
+	if len(cmd.Args) != 1 {
 		return fmt.Errorf("usage: %s <name>", cmd.Name)
 	}
 

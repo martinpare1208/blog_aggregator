@@ -33,3 +33,4 @@ DELETE FROM feed_follows WHERE feed_follows.id IN (
     WHERE $1 = feed_follows.user_id AND $2 = feeds.url
 ) 
 RETURNING *;
+

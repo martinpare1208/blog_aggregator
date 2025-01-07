@@ -22,7 +22,6 @@ func HandlerFollowing(s *State, cmd Command, user database.User) error {
 
 	for _, feed := range feeds {
 		fmt.Printf("%s\n", feed.FeedName)
-		fmt.Printf("%s\n", feed.UserName)
 	}
 	
 	fmt.Println("Feed printing complete.")

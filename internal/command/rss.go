@@ -2,15 +2,19 @@ package command
 
 import (
 	"context"
+	"database/sql"
 	"encoding/xml"
 	"fmt"
 	"html"
 	"io"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/martinpare1208/gator/internal/database"
 )
 
-const link = "https://www.wagslane.dev/index.xml"
+// const link = "https://www.wagslane.dev/index.xml"
 
 
 
@@ -70,20 +74,58 @@ func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 
 func Agg(s *State, cmd Command) (error) {
 
-	context := context.Background()
-	rss, err := FetchFeed(context, link)
+	if len (cmd.Args) != 1 {
+		return fmt.Errorf("usage: %s <duration of feed fetch>", cmd.Name)
+	}
+
+	timeBetweenRequests := cmd.Args[0]
+	
+	duration, err := time.ParseDuration(timeBetweenRequests)
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 
-	title := html.UnescapeString(rss.Channel.Item[0].Title)
-	desc := html.UnescapeString(rss.Channel.Item[0].Description)
+
+	ticker := time.NewTicker(duration)
+	for ; ; <- ticker.C {
+		scrapeFeeds(s)
+	}
+
+
+
+}
+
+
+func scrapeFeeds(s *State) (error) {
+	context := context.Background()
+	feed, err := s.DBConnection.GetNextFeedToFetch(context)
+	if err != nil {
+		return err
+	}
+
+	// If successful, update the feed that was fetched
+	_, err = s.DBConnection.MarkFeedFetched(context, database.MarkFeedFetchedParams{LastFetchedAt: sql.NullTime{Time: time.Now(), Valid: true}, UpdatedAt: time.Now(), ID: feed.ID})
+	if err != nil {
+		return err
+	}
+
+
+	fetchedFeed, err := FetchFeed(context, feed.Url)
+	if err != nil {
+		return err
+	}
+
+
+	// Print to console
+	fmt.Print("Grabbing feed...\n")
+	title := html.UnescapeString(fetchedFeed.Channel.Item[0].Title)
 
 	fmt.Printf("%s\n", title)
-	fmt.Printf("%s\n", desc)
 
 	return nil
+
+
+
 }
 
 
