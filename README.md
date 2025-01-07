@@ -43,6 +43,12 @@ Built to learn how RSS feeding works and utilizing a Postgres DB to store inform
 - `addfeed <feed_name> <feed_url>`: Add a new RSS feed to the aggregator.
 - `agg <time_duration>`: Aggregate the feeds every specified time duration (e.g., `30s`, `1m`).
 - `reset`: Resets the entire database.
+- `following`: Shows the currently followed RSS Feeds.
+- `login <user>`: Switches to other user.
+- `follow <feed_url>`: Follow an existing feed in the database.
+- `unfollow <feed_url>`: Unfollow a feed for current user.
+- `browse <row_limit>`: Show existing posts in DB.
+- `users`: Show existing users in DB.
 
 ---
 
