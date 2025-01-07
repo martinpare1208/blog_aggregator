@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"fmt"
+	"html"
 	"strconv"
 
 	"github.com/martinpare1208/gator/internal/database"
@@ -29,7 +30,7 @@ func HandlerBrowse(s *State, cmd Command, user database.User) error {
 
 	for _, post := range posts {
 		fmt.Printf("%s\n", post.Title)
-		fmt.Printf("%s\n", post.Description)
+		fmt.Printf("%s\n", html.UnescapeString(post.Description))
 	}
 
 

@@ -68,6 +68,14 @@ func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 		return nil, err
 	}
 
+	rss.Channel.Title = html.UnescapeString(rss.Channel.Title)
+	rss.Channel.Description = html.UnescapeString(rss.Channel.Description)
+	for i, item := range rss.Channel.Item {
+		item.Title = html.EscapeString(item.Title)
+		item.Description = html.UnescapeString(item.Description)
+		rss.Channel.Item[i] = item
+	}
+
 
 	return &rss, nil
 }
@@ -118,6 +126,9 @@ func scrapeFeeds(s *State) (error) {
 
 	//Check which RSS feed the post came from
 	dbFeed, err := s.DBConnection.GetFeedByUrl(context, feed.Url)
+	if err != nil {
+		return (err)
+	}
 
 
 	// Print to console

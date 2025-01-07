@@ -13,7 +13,7 @@ import (
 func HandlerFollowFeed(s *State, cmd Command, user database.User) error {
 	// process input
 	if len(cmd.Args) != 1 {
-		return fmt.Errorf("usage: %s <url of feed>", cmd.Args[0])
+		return fmt.Errorf("usage: %s <url of feed>", cmd.Name)
 	}
 
 	// save to database
